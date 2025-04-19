@@ -11,23 +11,26 @@ class LinkedList
   #     l.back #=> 3
   def initialize(ary=[])
     @head = nil
-    @tail = nil
     @size = 0
 
     ary.each { |element| push(element) } unless ary.empty?
   end
 
   # Adds a new node containing value to the end of the list
+  # If the list is empty, the new node is current head
   #     l = LinkedList.new([1, 2, 3])
   #     l.append(5)
   #     l.size #=> 4
   def append(value)
     node = Node.new(value)
-    if @tail
-      @tail.next_node = node
-      @tail = node
+    if @head.nil?
+      @head = node 
     else
-      @head = @tail = node
+      current_element = @head
+      while current_element.next_node != nil
+        current_element = current_element.next_node
+      end
+      current_element.next_node = node
     end
     @size += 1
   end
@@ -38,13 +41,7 @@ class LinkedList
   #       l.prepend(0)
   #       l.size #=> 4
   def prepend(value)
-    node = Node.new(value)
-    if @head
-      node.next_node = @head
-      @head = node
-    else
-      @head = @tail = node
-    end
+    @head = Node.new(value, @head)
     @size += 1
   end
 
@@ -63,7 +60,12 @@ class LinkedList
 
   # Returns the last node in the list
   def tail
-    nil
+    return unless @head
+    node = @head
+    until node.next_node.nil?
+      node = node.next_node
+    end
+    node.value
   end
 
   # Returns the node at a given index
@@ -76,30 +78,46 @@ class LinkedList
     current_index = 0
 
     while current_element && current_index < index
-      current = current.next_node
+      current_element = current_element.next_node
       current_index += 1
     end
-    current_element
+    current_element.value
+  end
+
+  # inserts an element at a given index
+  def insert_at(value, index)
+    if !@head
+      @head = Node.new(data)
+      return
+    end
+    
+    if index == 0
+      prepend(data)
+      return
+    end
+    previous = at(index - 1) || tail
+    node = Node.new(data, previous.next_node)
+    previous.next_node = node
+    @size += 1
   end
 
   # Removes the last element from the list and returns it
-  # 
-  #      l = LinkedList.new([1, 2, 3, 5])
-  #      l.pop #=> 5
   def pop
     return nil unless @head
-    node = @head
-    if @size == 1  # clear the list and return the value
+    
+    if @head.next_node.nil?
+      value = @head.value
       @head = nil
-      @tail = nil
-      @size = 0
-      return node.value
-    else 
-      @tail.value = nil
-      @tail = @tail.next_node
+      return value
     end
+
+    current = @head
+    while current.next_node.next_node 
+      current = current.next_node
+    end
+    value = current.next_node.value
+    current.next_node = nil
     @size -= 1
-    node.value
   end
 
   # Return the index of the node containing value or nil if not found
@@ -111,7 +129,7 @@ class LinkedList
       current = current.next_node
       count += 1
     end
-    nil
+    puts "Value not found" # in case value does not exist
   end
 
   # Return true if value is in the list, otherwise return false
@@ -119,14 +137,12 @@ class LinkedList
   # Represents LinkedList objects as strings, so we can print them them out and
   # preview them in the console.
   def to_s
-    nodes = []
-    current_element = @head
-    while current_element != nil
-      nodes << current_element.value
-      current_element = current_element.next_node
+    current = @head
+    while !current.nil?
+      print "( #{current.value} ) -> "
+      current = current.next_node
     end
-    nodes.join(" -> ")
-    nodes << "nil"  # nil represents the end of the list
+    print "nil\n"
   end
 
   # Iterate over the list.
@@ -144,9 +160,9 @@ class LinkedList
   class Node
     attr_accessor :value, :next_node
 
-    def initialize(value=nil)
+    def initialize(value, next_node=nil)
       @value = value
-      @next_node = nil
+      @next_node = next_node
     end
   end
 end
