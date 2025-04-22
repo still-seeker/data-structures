@@ -34,9 +34,16 @@ module BinarySearchTree
 
     # A visualizer of a binary search tree.
     def pretty_print(node=@root, prefix = '', is_left=true)
-      pretty_print(node.right, "#{prefix}#{is_left ? '|   ' : '    '}", false) if node.right
-      puts "#{prefix}#{is_left ? "└── " : "┌── "}#{node.data}"
+      pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
+      puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
       pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
+    end
+
+    def preorder(root)
+      return if root.nil?
+      print root.data + " "
+      preorder root.left
+      preorder root.rights
     end
 
     private
@@ -55,4 +62,4 @@ module BinarySearchTree
 end
 
 bst = BinarySearchTree::Tree.new([1, 7, 4, 23, 8, 9, 67, 6345, 324])
-bst.pretty_print
+p bst.pretty_print
