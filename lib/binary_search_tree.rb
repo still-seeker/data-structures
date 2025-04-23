@@ -23,12 +23,12 @@ module BinarySearchTree
 
     # Takes an array when initialized
     def initialize(array)
-      @array = array
       @root = build_tree(array)
     end
 
     # Constructs a binary search tree from an ordered tree
     def build_tree(array)
+      array = array.dup.sort.uniq
       recursive_build(array, 0, array.size-1)
     end
 
@@ -37,6 +37,23 @@ module BinarySearchTree
       pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
       puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
       pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
+    end
+
+    # Accepts a value to insert
+    def insert(value)
+      if value < @root.data
+        if @root.left.nil?
+          @root.left = Node.new(value)
+        else
+          insert(value)
+        end
+      elsif value > @root.data
+        if @root.right.nil?
+          @root.right = Node.new(value)
+        else
+          insert(value)
+        end
+      end
     end
 
     def preorder(root)
