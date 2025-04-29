@@ -103,6 +103,26 @@ class LinkedList
     @size += 1
   end
 
+  # Removes a node from a given index
+  def remove_at(index)
+    # deleting the first node
+    if index == 0
+      @head = @head.next_node
+      return
+    end
+
+    current_index = 0
+    current_node = @head
+    while current_index < (index - 1)
+      current_node = current_node.next_node
+      current_index += 1
+    end
+
+    node_after_deleted_node = current_node.next_node.next_node
+    current_node.next_node = node_after_deleted_node
+    @size -= 1
+  end
+
   # Removes the last element from the list and returns it
   def pop
     return nil unless @head
