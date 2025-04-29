@@ -21,7 +21,7 @@ class HashMap
     prime_number = 31
 
     key.each_char { |char| hash_code = prime_number * hash_code + char.ord }
-    hash_code
+    hash_code % @capacity
   end
 
   # Takes two arguments, key and value. The value is assigned to the key.
@@ -30,7 +30,7 @@ class HashMap
   def set(key, value)
     raise ArgumentError, "Hash keys must not be nil." unless key
     
-    address = hash(key) % @capacity
+    address = hash(key) 
     bucket  = @buckets[address]
     
     pair = bucket.find { |k, _| k == key}
@@ -46,7 +46,7 @@ class HashMap
 
   # takes one argument as a key and returns the value that is assigned to it.
   def get(key)
-    address = hash(key) % @capacity
+    address = hash(key) 
     bucket  = @buckets[address]
     pair    = bucket.find { |k, _| k == key }
     pair&.last
@@ -56,7 +56,7 @@ class HashMap
   # Takes a key as an argument and returns true or false based on whether or not
   # the key is in the  hash map.
   def has?(key)
-    address = hash(key) % @capacity
+    address = hash(key) 
     @buckets[address] && !@buckets[address].empty? ? true : false
   end
 
@@ -64,7 +64,7 @@ class HashMap
   # entry's value.
   # Returns nil if the key isn't in the hash map.
   def remove(key)
-    address = hash(key) % @capacity
+    address = hash(key) 
     return nil if @buckets[address].nil? || @buckets[address].empty?
     
     bucket = @buckets[address]
@@ -109,7 +109,7 @@ class HashMap
     entries = []
     @buckets.each do |bucket|
       next if bucket.nil?
-      bucket.each { |element| entries << [bucket[0], bucket[1]] }
+      bucket.each { |element| entries << element }
     end
     entries
   end
@@ -126,7 +126,7 @@ class HashMap
     # Rehash all entries
     @buckets.each do |bucket|
       bucket.each do |key, value|
-        address = hash(key) % new_capacity
+        address = hash(key) 
         new_buckets[address] << [key, value]
       end
     end
