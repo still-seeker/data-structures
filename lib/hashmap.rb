@@ -46,7 +46,7 @@ class HashMap
 
   # takes one argument as a key and returns the value that is assigned to it.
   def get(key)
-    address = hash(key)
+    address = hash(key) % @capacity
     bucket  = @buckets[address]
     pair    = bucket.find { |k, _| k == key }
     pair&.last
@@ -68,8 +68,8 @@ class HashMap
     return nil if @buckets[address].nil? || @buckets[address].empty?
     
     bucket = @buckets[address]
-    pair = bucket.find_index { |k, _| k == key }
-    value = bucket.delete_at(pair)
+    pair   = bucket.find_index { |k, _| k == key }
+    value  = bucket.delete_at(pair)
     @size -= 1
     return value 
   end
