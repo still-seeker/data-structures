@@ -12,7 +12,7 @@ class HashMap
   end
 
   def current_load
-    @size.to_f / (@capacity * @load_factor)
+    @size.to_f / @capacity 
   end
   
   # Takes a key and produces a hash code with it.
@@ -116,7 +116,7 @@ class HashMap
 
   private
   def needs_resizing?
-    current_load >= @load_factor
+    current_load > @load_factor
   end
 
   def resize
