@@ -56,26 +56,26 @@ module BinarySearchTree
       @root = delete_recursive(@root, value)
     end
 
-    def preorder(root)
-      return if root.nil?
-      print root.data + " "
-      preorder root.left
-      preorder root.rights
+    def preorder(node=@root)
+      return if node.nil?
+      print node.data + " "
+      preorder node.left
+      preorder node.rights
     end
 
-    def inorder(root)
-      if root
-        inorder(root.left)
-        print root.data + " "
-        inorder(root.right)
+    def inorder(node=@root)
+      if node
+        inorder(node.left)
+        print "#{node.data}, "
+        inorder(node.right)
       end
     end
 
-    def postorder(root)
-      if root
-        postorder(root.left)
-        postorder(root.right)
-        print root.data + " "
+    def postorder(node=@root)
+      if node
+        postorder(node.left)
+        postorder(node.right)
+        print node.data + " "
       end
     end
 
@@ -129,5 +129,7 @@ module BinarySearchTree
   end
 end
 
-bst = BinarySearchTree::Tree.new([1, 7, 4, 23, 8, 9, 67, 6345, 324])
-p bst.pretty_print
+
+arr = [1, 7, 4, 23, 8, 9, 67, 6345, 324]
+bst = BinarySearchTree::Tree.new(arr)
+p bst.inorder
