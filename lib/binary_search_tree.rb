@@ -44,9 +44,9 @@ module BinarySearchTree
       return Node.new(value) if node.nil?
 
       if value < node.data
-        node.left = insert_recursive(value, node.left)
+        node.left = insert(value, node.left)
       elsif value > node.data
-        node.right = insert_recursive(value, node.right)
+        node.right = insert(value, node.right)
       end
       node
     end
@@ -58,9 +58,9 @@ module BinarySearchTree
 
     def preorder(node=@root)
       return if node.nil?
-      print node.data + " "
+      print "#{node.data}, "
       preorder node.left
-      preorder node.rights
+      preorder node.right
     end
 
     def inorder(node=@root)
@@ -75,7 +75,7 @@ module BinarySearchTree
       if node
         postorder(node.left)
         postorder(node.right)
-        print node.data + " "
+        print "#{node.data}, "
       end
     end
 
@@ -132,4 +132,5 @@ end
 
 arr = [1, 7, 4, 23, 8, 9, 67, 6345, 324]
 bst = BinarySearchTree::Tree.new(arr)
+bst.insert(10)
 p bst.inorder
