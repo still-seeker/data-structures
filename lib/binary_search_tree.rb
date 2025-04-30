@@ -17,7 +17,7 @@ module BinarySearchTree
     end   
   end
 
-  # A Tree class to implement the Binanary search tree operations.
+  # A Tree class to implement the Binary search tree operations.
   class Tree 
     attr_accessor :root
 
@@ -28,8 +28,8 @@ module BinarySearchTree
 
     # Constructs a binary search tree from an ordered tree
     def build_tree(array)
-      arr = array.dup.sort.uniq
-      recursive_build(arr, 0, arr.size-1)
+      array = array.dup.sort.uniq
+      recursive_build(array, 0, array.size-1)
     end
 
     # A visualizer of a binary search tree.
