@@ -40,8 +40,15 @@ module BinarySearchTree
     end
 
     # Accepts a value to insert
-    def insert(value)
-      @root = insert_recursive(@root, value)
+    def insert(value, node=@root)
+      return Node.new(value) if node.nil?
+
+      if value < node.data
+        node.left = insert_recursive(value, node.left)
+      elsif value > node.data
+        node.right = insert_recursive(value, node.right)
+      end
+      node
     end
 
     # Accepts a value to delete
@@ -83,18 +90,6 @@ module BinarySearchTree
       root.left  = recursive_build(arr, start, mid-1) # left child
       root.right = recursive_build(arr, mid+1, _end)  # right child
       root
-    end
-
-    # A recursive insertion helper method
-    def insert_recursive(node, value)
-      return Node.new(value) if node.nil?
-
-      if value < node.data
-        node.left = insert_recursive(node.left, value)
-      elsif value > node.data
-        node.right = insert_recursive(node.right, value)
-      end
-      node
     end
 
     # A recursive delete helper method
