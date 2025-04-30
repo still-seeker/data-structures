@@ -93,23 +93,23 @@ module BinarySearchTree
     end
 
     # A recursive delete helper method
-    def delete_recursive(value_to_delete, node)
+    def delete_recursive(value_to_delete, node=@root)
       if node.nil?
         return nil
       elsif value_to_delete < node.data  # Recursively calling delete method on left subtree
         node.left = delete_recursive(value_to_delete, node.left)
-        node
-      elsif value_to_delete > node.data # Recursively calling delete method on right subtree
+         return node
+      elsif value_to_delete > node.data  # Recursively calling delete method on right subtree
         node.right = delete_recursive(value_to_delete, node.right)
-        node
+        return node
       elsif value_to_delete == node.data # if the current node is the one we want to delete
-        if node.left.nil?  # node has one right child, return it
+        if node.left.nil?                # node has one right child, return it
           return node.right
-        elsif node.right.nil? # node has one left child, return it
+        elsif node.right.nil?            # node has one left child, return it
           return node.left
-        else # current node has two children, use lift helper method to handle reconstruction logic
+        else                             # current node has two children, use lift helper method to handle reconstruction logic
           node.right = lift(node.right, node)
-          node
+          return node
         end
       end
     end
@@ -120,10 +120,10 @@ module BinarySearchTree
     def lift(node, node_to_delete)
       if node.left  # Recursively call this method to continue down to left sub tree to fid successor
         node.left = lift(node.left, node_to_delete)
-        node
-      else # current node has no left node, current node of this method is successor node
+        return node
+      else          # current node has no left node, current node of this method is successor node
         node_to_delete = node.data
-        node.right
+        return node.right
       end
     end
   end
