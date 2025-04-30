@@ -53,7 +53,7 @@ module BinarySearchTree
 
     # Accepts a value to delete
     def delete(value)
-      @root = delete_recursive(@root, value)
+      @root = delete_recursive(value, @root)
     end
 
     def preorder(node=@root)
@@ -132,5 +132,6 @@ end
 
 arr = [1, 7, 4, 23, 8, 9, 67, 6345, 324]
 bst = BinarySearchTree::Tree.new(arr)
-bst.insert(10)
+bst.insert(100)
+bst.delete(1)
 p bst.inorder
