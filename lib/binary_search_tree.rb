@@ -69,6 +69,19 @@ module BinarySearchTree
       end
     end
 
+    def level_order
+      queue = []
+      queue << @root
+
+      while !queue.empty?
+        current_node = queue.shift
+        print "#{current_node.data}, "
+
+        queue << current_node.left unless current_node.left.nil?
+        queue << current_node.right unless current_node.right.nil?
+      end
+    end
+
     def preorder(node=@root)
       return if node.nil?
       print "#{node.data}, "
@@ -116,9 +129,9 @@ module BinarySearchTree
         node.right = delete_recursive(value_to_delete, node.right)
         return node
       elsif value_to_delete == node.data # if the current node is the one we want to delete
-        if node.left.nil?                # node has one right child, return it
+        if node.left.nil?                # node has one right child, replace it with its child
           return node.right
-        elsif node.right.nil?            # node has one left child, return it
+        elsif node.right.nil?            # node has one left child, replace it with its child
           return node.left
         else                             # current node has two children, use lift helper method to handle reconstruction logic
           node.right = lift(node.right, node)
@@ -146,5 +159,8 @@ end
 arr = [1, 7, 4, 23, 8, 9, 67, 6345, 324]
 bst = BinarySearchTree::Tree.new(arr)
 # bst.insert(100)
-# p bst.find(1)
-# p bst.inorder
+p bst.find(1)
+p bst.level_order
+p bst.inorder
+p bst.preorder
+p bst.postorder
