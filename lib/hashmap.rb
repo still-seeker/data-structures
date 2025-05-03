@@ -4,36 +4,36 @@ class HashMap
   CAPACITY = 16
   attr_accessor :load_factor, :capacity, :size
 
-  def initialize(init_capacity=CAPACITY, load_factor=0.75)
-    @buckets     = Array.new(init_capacity) { []}
+  def initialize(init_capacity = CAPACITY, load_factor = 0.75)
+    @buckets     = Array.new(init_capacity) { [] }
     @load_factor = load_factor
     @capacity    = init_capacity
     @size        = 0
   end
 
   def current_load
-    @size.to_f / @capacity 
+    @size.to_f / @capacity
   end
-  
+
   # Takes a key and produces a hash code with it.
   def hash(key)
     hash_code    = 0
     prime_number = 31
 
-    key.each_char { |char| hash_code = prime_number * hash_code + char.ord }
+    key.each_char { |char| hash_code = (prime_number * hash_code) + char.ord }
     hash_code
   end
 
   # Takes two arguments, key and value. The value is assigned to the key.
-  # If the key already exists, the old value is overwritten and key's value 
+  # If the key already exists, the old value is overwritten and key's value
   # updated with the new value.
   def set(key, value)
     raise ArgumentError, "Hash keys must not be nil." unless key
-    
+
     address = hash(key) % @capacity
     bucket  = @buckets[address]
-    
-    pair = bucket.find { |k, _| k == key}
+
+    pair = bucket.find { |k, _| k == key }
     if pair
       pair[1] = value
     else
@@ -60,26 +60,26 @@ class HashMap
     @buckets[address] && !@buckets[address].empty? ? true : false
   end
 
-  # If key exists, removes the entry with the given key and returns the deleted 
+  # If key exists, removes the entry with the given key and returns the deleted
   # entry's value.
   # Returns nil if the key isn't in the hash map.
   def remove(key)
     address = hash(key) % @capacity
     return nil if @buckets[address].nil? || @buckets[address].empty?
-    
+
     bucket = @buckets[address]
     pair   = bucket.find_index { |k, _| k == key }
     value  = bucket.delete_at(pair)
     @size -= 1
-    return value 
+    value
   end
 
   # Returns the number of stored keys in the hash map
   def length
     @size
   end
-  
-  # Removes all entries from the hash map 
+
+  # Removes all entries from the hash map
   def clear
     @buckets = Array.new(CAPACITY) { [] }
     @size    = 0
@@ -94,7 +94,7 @@ class HashMap
     end
     values
   end
-  
+
   def keys
     keys = []
     @buckets.each do |bucket|
@@ -109,12 +109,14 @@ class HashMap
     entries = []
     @buckets.each do |bucket|
       next if bucket.nil?
+
       bucket.each { |element| entries << element }
     end
     entries
   end
 
   private
+
   def needs_resizing?
     current_load > @load_factor
   end
@@ -122,7 +124,7 @@ class HashMap
   def resize
     new_capacity = @capacity * 2
     new_buckets = Array.new(new_capacity) { [] }
-    
+
     # Rehash all entries
     @buckets.each do |bucket|
       bucket.each do |key, value|
@@ -133,10 +135,8 @@ class HashMap
     @buckets  = new_buckets
     @capacity = new_capacity
   end
-  
-  def each
-    for item in self
-      yield item
-    end
+
+  def each(&block)
+    each(&block)
   end
 end

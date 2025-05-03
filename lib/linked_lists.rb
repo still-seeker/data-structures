@@ -5,11 +5,11 @@ class LinkedList
 
   # Creates a new linked-list. Takes an optional array argument to initialize the
   # list.
-  # 
+  #
   #     l = LinkedList.new([1, 2, 3])
   #     l.head #=> 1
   #     l.back #=> 3
-  def initialize(ary=[])
+  def initialize(ary = [])
     @head = nil
     @size = 0
 
@@ -24,19 +24,17 @@ class LinkedList
   def append(value)
     node = Node.new(value)
     if @head.nil?
-      @head = node 
+      @head = node
     else
       current_element = @head
-      while current_element.next_node != nil
-        current_element = current_element.next_node
-      end
+      current_element = current_element.next_node until current_element.next_node.nil?
       current_element.next_node = node
     end
     @size += 1
   end
 
   # Adds a new node to the start of the list
-  # 
+  #
   #       l = LinkedList.new([1, 2, 3])
   #       l.prepend(0)
   #       l.size #=> 4
@@ -49,31 +47,27 @@ class LinkedList
   #
   #     l = LinkedList.new([4, 5])
   #     l.size #=> 2
-  def size
-    @size
-  end
-  
+  attr_reader :size
+
   # Returns the first node in the list
-  def head
-    @head
-  end
+  attr_reader :head
 
   # Returns the last node in the list
   def tail
     return unless @head
+
     node = @head
-    until node.next_node.nil?
-      node = node.next_node
-    end
+    node = node.next_node until node.next_node.nil?
     node.value
   end
 
   # Returns the node at a given index
-  # 
+  #
   #     l = LinkedList.new([1, 2, 3, 4])
   #     l.at(2) #=> 3
   def at(index)
-    return nil if index < 0
+    return nil if index.negative?
+
     current_element = @head
     current_index = 0
 
@@ -87,7 +81,7 @@ class LinkedList
   # inserts an element at a given index
   def insert_at(value, index)
     new_node = Node.new(value)
-    if index == 0
+    if index.zero?
       new_node.next_node = @head
       @head = new_node
       return
@@ -106,7 +100,7 @@ class LinkedList
   # Removes a node from a given index
   def remove_at(index)
     # deleting the first node
-    if index == 0
+    if index.zero?
       @head = @head.next_node
       return
     end
@@ -126,7 +120,7 @@ class LinkedList
   # Removes the last element from the list and returns it
   def pop
     return nil unless @head
-    
+
     if @head.next_node.nil?
       value = @head.value
       @head = nil
@@ -134,10 +128,8 @@ class LinkedList
     end
 
     current = @head
-    while current.next_node.next_node 
-      current = current.next_node
-    end
-    value = current.next_node.value
+    current = current.next_node while current.next_node.next_node
+    current.next_node.value
     current.next_node = nil
     @size -= 1
   end
@@ -146,8 +138,9 @@ class LinkedList
   def find(value)
     current = @head
     count   = 0
-    while current != nil
+    until current.nil?
       return count if current.value == value
+
       current = current.next_node
       count += 1
     end
@@ -156,10 +149,11 @@ class LinkedList
 
   # Return true if value is in the list, otherwise return false
   def contains(value)
-    current = @head 
+    current = @head
     count   = 0
-    while  current != nil
+    until current.nil?
       return true if current.value == value
+
       current = current.next_node
       count += 1
     end
@@ -170,7 +164,7 @@ class LinkedList
   # preview them in the console.
   def to_s
     current = @head
-    while !current.nil?
+    until current.nil?
       print "( #{current.value} ) -> "
       current = current.next_node
     end
@@ -181,10 +175,9 @@ class LinkedList
   # This implementation is needed for methods in the Enumerable module to use
   def each_list
     return unless @head
+
     node = @head
-    while @head
-      yield node.next_node
-    end
+    yield node.next_node while @head
   end
   alias each each_list
 
@@ -192,7 +185,7 @@ class LinkedList
   class Node
     attr_accessor :value, :next_node
 
-    def initialize(value, next_node=nil)
+    def initialize(value, next_node = nil)
       @value = value
       @next_node = next_node
     end
