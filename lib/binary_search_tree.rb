@@ -105,6 +105,17 @@ module BinarySearchTree
       end
     end
 
+    def depth(value, node=@root, current_depth=0)
+      return nil if node.nil?
+
+      if value == node.data
+        current_depth 
+      elsif value < node.data
+        depth(value, node.left, current_depth + 1)
+      else 
+        depth(value, node.right, current_depth + 1)
+      end
+    end
     private
     
     # Recursive function to construct the BST
@@ -161,6 +172,4 @@ bst = BinarySearchTree::Tree.new(arr)
 # bst.insert(100)
 p bst.find(1)
 p bst.level_order
-p bst.inorder
-p bst.preorder
-p bst.postorder
+p bst.depth(80)
