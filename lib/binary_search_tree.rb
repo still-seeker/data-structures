@@ -53,28 +53,35 @@ module BinarySearchTree
 
     # Accepts a value to delete
     def delete(value, current_root = @root) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
-      return current_root if current_root.nil?
-
-      if value < current_root.data
+      if current_root.nil?
+        current_root
+      elsif value < current_root.data
         current_root.left = delete(value, current_root.left)
+        current_root
       elsif value > current_root.data
         current_root.right = delete(value, current_root.right)
-      else
-        return current_root.right if current_root.left.nil?
-        return current_root.left if current_root.right.nil?
-
-        successor = check_successor(current_root)
-        current_root.data = successor.data
-        current_root.right = delete(successor.data, current_root.right)
+        current_root
+      elsif value == current_root.data
+        if current_root.left.nil?
+          current_root.right
+        elsif current_root.right.nil?
+          current_root.left
+        else
+          current_root.right = check_successor(current_root, current_root.right)
+          current_root
+        end
       end
     end
 
     # Changes the current node's value to the value of its successor
-    def check_successor(node_to_delete = @root)
-      node_to_delete = node_to_delete.right
-
-      node_to_delete = node_to_delete.left while !node_to_delete.nil? && !node_to_delete.left.nil?
-      node_to_delete
+    def check_successor(node_to_delete, node = @root)
+      if node.left
+        node.left = check_successor(node_to_delete, node.left)
+        node
+      else
+        node_to_delete.data = node.data
+        node.right
+      end
     end
 
     # Accepts a value and returns the node with the given value
@@ -92,39 +99,43 @@ module BinarySearchTree
 
     def level_order
       queue = []
+      result = []
       queue << @root
 
       until queue.empty?
         current_node = queue.shift
-        print "#{current_node.data}, "
+        result << current_node.data
 
         queue << current_node.left unless current_node.left.nil?
         queue << current_node.right unless current_node.right.nil?
       end
+      result
     end
 
-    def preorder(node = @root)
-      return if node.nil?
+    def preorder(node = @root, result = [])
+      return result if node.nil?
 
-      print "#{node.data}, "
-      preorder node.left
-      preorder node.right
+      result << node.data
+      preorder(node.left, result)
+      preorder(node.right, result)
     end
 
-    def inorder(node = @root)
-      return unless node
+    def inorder(node = @root, result = [])
+      return result if node.nil?
 
-      inorder(node.left)
-      print "#{node.data}, "
-      inorder(node.right)
+      inorder(node.left, result)
+      result << node.data
+      inorder(node.right, result)
+      result
     end
 
-    def postorder(node = @root)
-      return unless node
+    def postorder(node = @root, result = [])
+      return result unless node
 
-      postorder(node.left)
-      postorder(node.right)
-      print "#{node.data}, "
+      postorder(node.left, result)
+      postorder(node.right, result)
+      result << node.data
+      result
     end
 
     def depth(value, node = @root, current_depth = 0)
@@ -139,9 +150,9 @@ module BinarySearchTree
       end
     end
 
-    def height(node = @root)
+    def height(node = @root) # rubocop:disable Metrics/MethodLength
       if node.nil?
-        0
+        -1
       else
         right_height = height(node.right)
         left_height  = height(node.left)
@@ -184,23 +195,11 @@ module BinarySearchTree
       root.right = recursive_build(arr, mid + 1, _end)  # right child
       root
     end
-
-    # helper method for calculating height
-    def calculate_height(node = @root)
-      return -1 if node.nil?
-
-      left_height = calculate_height(node.left)
-      right_height = calculate_height(node.right)
-
-      [left_height, right_height].max + 1
-    end
   end
 end
 
-arr = [1, 7, 4, 23, 8, 9, 67, 6345, 324]
+arr = [1, 7, 4, 23, 8, 9, 67, 6345, 324, 5, 34, 93, 200]
 bst = BinarySearchTree::Tree.new(arr)
-# bst.insert(100)
-
-p bst.level_order
-p bst.delete(9)
-p bst.level_order
+p bst.pretty_print
+p bst.delete(6345)
+p bst.pretty_print
