@@ -52,8 +52,29 @@ module BinarySearchTree
     end
 
     # Accepts a value to delete
-    def delete(value)
-      @root = delete_recursive(value, @root)
+    def delete(value, current_root = @root) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+      return current_root if current_root.nil?
+
+      if value < current_root.data
+        current_root.left = delete(value, current_root.left)
+      elsif value > current_root.data
+        current_root.right = delete(value, current_root.right)
+      else
+        return current_root.right if current_root.left.nil?
+        return current_root.left if current_root.right.nil?
+
+        successor = check_successor(current_root)
+        current_root.data = successor.data
+        current_root.right = delete(successor.data, current_root.right)
+      end
+    end
+
+    # Changes the current node's value to the value of its successor
+    def check_successor(node_to_delete = @root)
+      node_to_delete = node_to_delete.right
+
+      node_to_delete = node_to_delete.left while !node_to_delete.nil? && !node_to_delete.left.nil?
+      node_to_delete
     end
 
     # Accepts a value and returns the node with the given value
@@ -138,49 +159,14 @@ module BinarySearchTree
       root
     end
 
-    # A recursive delete helper method
-    def delete_recursive(value_to_delete, node = @root)
-      if node.nil?
-        nil
-      elsif value_to_delete < node.data  # Recursively calling delete method on left subtree
-        node.left = delete_recursive(value_to_delete, node.left)
-        node
-      elsif value_to_delete > node.data  # Recursively calling delete method on right subtree
-        node.right = delete_recursive(value_to_delete, node.right)
-        node
-      elsif value_to_delete == node.data # if the current node is the one we want to delete
-        if node.left.nil?                # node has one right child, replace it with its child
-          node.right
-        elsif node.right.nil?            # node has one left child, replace it with its child
-          node.left
-        else                             # current node has two children, use lift helper method to handle reconstruction logic
-          node.right = lift(node.right, node)
-          node
-        end
-      end
-    end
-
-    # Changes the current node's value to the value of its successor
-    # This method handles logic where the current node has two children that have to be
-    # reconstructed after their parent has been deleted.
-    def lift(node, node_to_delete)
-      if node.left  # Recursively call this method to continue down to left sub tree to fid successor
-        node.left = lift(node.left, node_to_delete)
-        node
-      else          # current node has no left node, current node of this method is successor node
-        node.data
-        node.right
-      end
-    end
-
     # helper method for calculating height
-    def calculate_height(node)
+    def calculate_height(node = @root)
       return -1 if node.nil?
 
       left_height = calculate_height(node.left)
-      righ_height = calculate_height(node.right)
+      right_height = calculate_height(node.right)
 
-      [left_height, righ_height].max + 1
+      [left_height, right_height].max + 1
     end
   end
 end
@@ -188,6 +174,7 @@ end
 arr = [1, 7, 4, 23, 8, 9, 67, 6345, 324]
 bst = BinarySearchTree::Tree.new(arr)
 # bst.insert(100)
-p bst.find(70)
+
 p bst.level_order
-p bst.height(8)
+p bst.delete(9)
+p bst.level_order
