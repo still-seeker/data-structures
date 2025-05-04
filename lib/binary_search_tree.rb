@@ -197,9 +197,3 @@ module BinarySearchTree
     end
   end
 end
-
-arr = [1, 7, 4, 23, 8, 9, 67, 6345, 324, 5, 34, 93, 200]
-bst = BinarySearchTree::Tree.new(arr)
-p bst.pretty_print
-p bst.delete(6345)
-p bst.pretty_print
