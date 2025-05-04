@@ -166,6 +166,12 @@ module BinarySearchTree
       end
     end
 
+    # Rebalances the tree in case it is not balanced
+    def rebalance(*)
+      @root = build_tree(inorder)
+      pretty_print
+    end
+
     private
 
     # Recursive function to construct the BST
