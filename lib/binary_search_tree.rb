@@ -140,10 +140,30 @@ module BinarySearchTree
     end
 
     def height(node = @root)
-      target = find(node)
-      return if node.nil?
+      if node.nil?
+        0
+      else
+        right_height = height(node.right)
+        left_height  = height(node.left)
 
-      calculate_height(target)
+        if left_height > right_height
+          left_height + 1
+        else
+          right_height + 1
+        end
+      end
+    end
+
+    # Checks whether the tree is balanced
+    def balanced?(current_root = @root)
+      left_sub_tree = current_root.left
+      right_sub_tree = current_root.right
+
+      if height(left_sub_tree) >= height(right_sub_tree) + 2
+        false
+      elsif height(left_sub_tree) <= height(right_sub_tree) + 1 || height(left_sub_tree) + 1 >= height(right_sub_tree)
+        true
+      end
     end
 
     private
