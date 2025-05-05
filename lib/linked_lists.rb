@@ -2,6 +2,7 @@
 #  removed dynamically.
 class LinkedList
   include Enumerable
+  attr_accessor :head, :size
 
   # Creates a new linked-list. Takes an optional array argument to initialize the
   # list.
@@ -42,15 +43,6 @@ class LinkedList
     @head = Node.new(value, @head)
     @size += 1
   end
-
-  # Returns the total number of nodes in the list
-  #
-  #     l = LinkedList.new([4, 5])
-  #     l.size #=> 2
-  attr_reader :size
-
-  # Returns the first node in the list
-  attr_reader :head
 
   # Returns the last node in the list
   def tail
