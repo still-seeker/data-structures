@@ -142,12 +142,10 @@ class LinkedList
   # Return true if value is in the list, otherwise return false
   def contains(value)
     current = @head
-    count   = 0
     until current.nil?
       return true if current.value == value
 
       current = current.next_node
-      count += 1
     end
     false
   end
